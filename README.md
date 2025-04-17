@@ -43,6 +43,7 @@ The repository is organized into two main modules:
 ### Prerequisites
 - Python 3.8 or higher
 - Access to Anthropic's Claude API (API key required)
+- CUDA-compatible GPU (required for all experiments)
 - Sufficient computational resources (see Hardware Requirements)
 
 ### Installation Steps
@@ -52,7 +53,7 @@ The repository is organized into two main modules:
 2. **Install dependencies**:
    - Run `pip install -r requirements.txt`
    - The requirements file includes:
-     - PyTorch (1.10+)
+     - PyTorch (1.10+) with CUDA support
      - Gymnasium (0.26+)
      - Numpy, Pandas, Matplotlib
      - Anthropic Python SDK
@@ -69,19 +70,21 @@ The repository is organized into two main modules:
 
 ## Hardware Requirements
 
-The experiments have varying computational needs:
+All experiments require a GPU as they use Deep Q-learning algorithms. Specific requirements:
 
-- **Basic CartPole experiments**: Can run on CPU only
-  - Minimum: 2 CPU cores, 4GB RAM
-  - Recommended: 4 CPU cores, 8GB RAM
+- **GPU Requirement (MANDATORY)**:
+  - CUDA-compatible GPU with at least 4GB VRAM
+  - Latest NVIDIA drivers and CUDA toolkit
+  - PyTorch with CUDA support properly installed and verified
 
-- **BipedalWalker experiments**: More computationally intensive
-  - Minimum: 4 CPU cores, 8GB RAM
-  - Recommended: 8 CPU cores, 16GB RAM, CUDA-compatible GPU
+- **CartPole experiments**:
+  - Minimum: 4 CPU cores, 8GB RAM, 4GB VRAM GPU
+  - Recommended: 6+ CPU cores, 16GB RAM, 6GB+ VRAM GPU
 
-- **Full experiment suite**: For running all notebooks with extended episodes
-  - Recommended: 8+ CPU cores, 16GB+ RAM, 4GB+ VRAM GPU
-  - Expected runtime: 4-12 hours depending on hardware
+- **BipedalWalker experiments**:
+  - Minimum: 6 CPU cores, 16GB RAM, 6GB VRAM GPU
+  - Recommended: 8+ CPU cores, 32GB RAM, 8GB+ VRAM GPU
+  - Expected runtime: 8-24 hours depending on hardware
 
 - **API Usage**: The experimental notebooks make approximately 50-200 API calls to Claude (depending on configuration), so ensure your Anthropic API quota is sufficient
 
@@ -106,6 +109,7 @@ The experiments have varying computational needs:
    - Each notebook has a configuration cell at the top
    - Adjust parameters like episode count or update frequency if needed
    - Lower episode counts will run faster but may not show full adaptation effects
+   - Verify GPU is properly detected with `torch.cuda.is_available()`
 
 ### Recommended Experiment Sequence
 
@@ -124,6 +128,7 @@ Each notebook contains configurable parameters:
 - **Change Interval**: When environment parameters change
 - **Seeds**: Random seeds for reproducibility
 - **Update Settings**: How frequently to request LLM updates
+- **Batch Size**: May need adjustment based on available GPU memory
 
 ## Interpreting Results
 
@@ -140,10 +145,13 @@ To customize for your own environments:
 1. Create a new environment wrapper in `RLEnvironment/env/`
 2. Define appropriate reward components
 3. Configure the adaptation system in a new notebook
+4. Ensure GPU compatibility with your environment
 
 ## Troubleshooting
 
 Common issues:
+- **CUDA Errors**: Verify that PyTorch can access your GPU with `torch.cuda.is_available()`
+- **Out of Memory**: Reduce batch size or model complexity
 - **API Key Errors**: Ensure the Anthropic API key is correctly configured
 - **Memory Errors**: Reduce episode counts or batch sizes
 - **Import Errors**: Verify all dependencies are installed with correct versions
