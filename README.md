@@ -1,54 +1,154 @@
-# Adaptive Reward Function Learning using LLMs  
-**Dynamically generates reward functions for RL agents** using LLMs through the Anthropic API. Automatically adapts to environment changes for more robust performance than static reward systems.  
+# Adaptive Reward Function Learning using LLMs
 
-## Quick Setup  
-1. Install requirements:  
-```bash  
-pip install -r requirements.txt  
-```
+## What Is This Project?
 
-2. Add API key to `AdaptiveRewardFunctionLearning/Prompts/prompts.py`:
-```python
-apiKey = "your_anthropic_api_key_here"  # Get from Anthropic  
-```
+This project demonstrates an innovative approach to reinforcement learning by using Large Language Models (LLMs) to dynamically generate and adapt reward functions. Key aspects include:
 
-## Run Basic Training (CartPole)
-```python
-from RLEnvironment.env import CustomCartPoleEnv  
-from RLEnvironment.training.agent import DQLearningAgent  
-from RLEnvironment.training.training import trainDQLearning  
-import gymnasium as gym  
+- **Dynamic Reward Generation**: The system uses Anthropic's Claude to create reward functions that evolve during training
+- **Environmental Adaptation**: Automatically detects and adapts to changes in the environment parameters
+- **Component-Based Rewards**: Uses separate components for stability and efficiency with dynamic weighting
+- **Enhanced Robustness**: Provides significantly better performance than static reward functions when environments change
+- **Explainable AI**: Generates natural language explanations for reward adjustments
 
-env = CustomCartPoleEnv(gym.make('CartPole-v1'), numComponents=2)  
-agent = DQLearningAgent(env=env, stateSize=4, actionSize=2)  
-trainDQLearning(agent, env, numEpisodes=1000)  
-```
+## Project Structure
 
-## Run Analysis Notebooks
-```bash
-#Navigate to the AdaptiveRewardFunctionLearning folder
+The repository is organized into two main modules:
 
-# Explainability analysis  
-jupyter notebook Experiments/1.1_explainability.ipynb  
+### RLEnvironment
+- **env/**: Contains environment wrappers for CartPole and BipedalWalker
+  - `cartPoleSetup.py`: CartPole environment wrapper with component rewards
+  - `bipedalWalkerSetup.py`: BipedalWalker environment wrapper
+  - `wrappers.py`: General reward function wrapper classes
+- **training/**: Contains reinforcement learning training functionality
+  - `agent.py`: Implementation of the DQN learning agent
+  - `training.py`: Main training loop and utilities
 
-# CartPole robustness  
-jupyter notebook Experiments/2.1_Robustness_Cart_Pole.ipynb
+### AdaptiveRewardFunctionLearning
+- **Prompts/**: Contains LLM prompting infrastructure
+  - `prompts.py`: API key configuration and model settings
+  - `criticPrompts.py`: Templates for reward function evaluation
+- **RewardGeneration/**: Core reward function management
+  - `rewardCritic.py`: System for evaluating and updating reward functions
+  - `rewardCodeGeneration.py`: Initial reward function components
+  - `cartpole_energy_reward.py`: Energy-based reward function implementation
+- **Experiments/**: Analysis notebooks for running experiments
+  - `1.1_explainability.ipynb`: Analysis of LLM's ability to explain reward functions
+  - `2.1_Robustness_Cart_Pole.ipynb`: Tests adaptation to CartPole environment changes
+  - `2.2_Robustness_Bi-Pedal_Walker.ipynb`: Tests adaptation in complex BipedalWalker environment
+  - `3.1_performance.ipynb`: Performance comparison of adaptive vs static rewards in CartPole
+  - `3.2_performance_Bi-Pedal_Walker.ipynb`: Performance analysis in BipedalWalker environment
 
-# Bi-Pedal Walker Robustness
-jupyter notebook Experiments/2.2_Robustness_Bi-Pedal_Walker.ipynb
+## Setup & Installation
 
-# CartPole Performance
-jupyter notebook Experiments/3.1_performance.ipynb
+### Prerequisites
+- Python 3.8 or higher
+- Access to Anthropic's Claude API (API key required)
+- Sufficient computational resources (see Hardware Requirements)
 
+### Installation Steps
+1. **Clone the repository**:
+   - Use Git to clone the repository to your local machine
 
-# Bi-Pedal Walker performance  
-jupyter notebook Experiments/3.2_performance_Bi-Pedal_Walker.ipynb  
-```
+2. **Install dependencies**:
+   - Run `pip install -r requirements.txt`
+   - The requirements file includes:
+     - PyTorch (1.10+)
+     - Gymnasium (0.26+)
+     - Numpy, Pandas, Matplotlib
+     - Anthropic Python SDK
+     - Jupyter Notebook/Lab
+     - Seaborn and other visualization tools
 
-## Key Features
-* Automatic reward adaptation during environment changes
-* LLM-generated reward components with dynamic weights
-* Built-in visualization tools for training analysis
-* Pre-configured experiments for reproducibility
+3. **Configure API access**:
+   - Open `AdaptiveRewardFunctionLearning/Prompts/prompts.py`
+   - Replace the placeholder with your Anthropic API key:
+     ```
+     apiKey = "your_anthropic_api_key_here"
+     ```
+   - The default model is set to Claude 3.5 Sonnet, but can be changed to other Claude models
 
-**Note**: All paths are relative to project root. Ensure you have Jupyter installed for notebook analysis.
+## Hardware Requirements
+
+The experiments have varying computational needs:
+
+- **Basic CartPole experiments**: Can run on CPU only
+  - Minimum: 2 CPU cores, 4GB RAM
+  - Recommended: 4 CPU cores, 8GB RAM
+
+- **BipedalWalker experiments**: More computationally intensive
+  - Minimum: 4 CPU cores, 8GB RAM
+  - Recommended: 8 CPU cores, 16GB RAM, CUDA-compatible GPU
+
+- **Full experiment suite**: For running all notebooks with extended episodes
+  - Recommended: 8+ CPU cores, 16GB+ RAM, 4GB+ VRAM GPU
+  - Expected runtime: 4-12 hours depending on hardware
+
+- **API Usage**: The experimental notebooks make approximately 50-200 API calls to Claude (depending on configuration), so ensure your Anthropic API quota is sufficient
+
+## Running Experiments
+
+### Setting Up Jupyter Notebook
+
+1. **Start Jupyter**:
+   ```
+   jupyter notebook
+   ```
+   or
+   ```
+   jupyter lab
+   ```
+
+2. **Navigate to the experiment directory**:
+   - Browse to `AdaptiveRewardFunctionLearning/Experiments/`
+   - Open the desired notebook
+
+3. **Configure notebook environment**:
+   - Each notebook has a configuration cell at the top
+   - Adjust parameters like episode count or update frequency if needed
+   - Lower episode counts will run faster but may not show full adaptation effects
+
+### Recommended Experiment Sequence
+
+For best understanding of the project, run notebooks in this order:
+
+1. `1.1_explainability.ipynb` - Understand how LLMs explain reward functions
+2. `3.1_performance.ipynb` - See basic performance in CartPole
+3. `3.2_performance_Bi-Pedal_Walker.ipynb` - See performance in Bi-Pedal Walker
+4. `2.1_Robustness_Cart_Pole.ipynb` - Observe adaptation to environment changes
+5. `2.2_Robustness_Bi-Pedal_Walker.ipynb` - See adaptation in complex environments
+
+### Experiment Parameters
+
+Each notebook contains configurable parameters:
+- **Episodes**: Number of training iterations (higher = better results but longer runtime)
+- **Change Interval**: When environment parameters change
+- **Seeds**: Random seeds for reproducibility
+- **Update Settings**: How frequently to request LLM updates
+
+## Interpreting Results
+
+The experiments produce various visualizations:
+
+- **Reward Plots**: Show performance over time
+- **Component Weight Evolution**: Track how stability vs efficiency balance changes
+- **Adaptation Speed**: Measure recovery time after environment changes
+- **Comparison Metrics**: Quantify advantages over static reward approaches
+
+## Extending the Project
+
+To customize for your own environments:
+1. Create a new environment wrapper in `RLEnvironment/env/`
+2. Define appropriate reward components
+3. Configure the adaptation system in a new notebook
+
+## Troubleshooting
+
+Common issues:
+- **API Key Errors**: Ensure the Anthropic API key is correctly configured
+- **Memory Errors**: Reduce episode counts or batch sizes
+- **Import Errors**: Verify all dependencies are installed with correct versions
+- **Runtime Errors**: Check logs for specific component failures
+
+---
+
+For additional support or to report issues, please use the GitHub issues section.
