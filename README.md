@@ -86,7 +86,7 @@ All experiments require a GPU as they use Deep Q-learning algorithms. Specific r
   - Recommended: 8+ CPU cores, 32GB RAM, 8GB+ VRAM GPU
   - Expected runtime: 8-24 hours depending on hardware
 
-- **API Usage**: The experimental notebooks make approximately 50-200 API calls to Claude (depending on configuration), so ensure your Anthropic API quota is sufficient
+- **API Usage**: The experimental notebooks make approximately 10-100 API calls to Claude (depending on configuration), so ensure your Anthropic API quota is sufficient
 
 ## Running Experiments
 
@@ -156,7 +156,3 @@ Common issues:
 - **Memory Errors**: Reduce episode counts or batch sizes
 - **Import Errors**: Verify all dependencies are installed with correct versions
 - **Runtime Errors**: Check logs for specific component failures
-
----
-
-For additional support or to report issues, please use the GitHub issues section.
