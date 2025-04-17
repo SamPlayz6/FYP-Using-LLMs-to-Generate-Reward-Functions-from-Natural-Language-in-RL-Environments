@@ -1,0 +1,49 @@
+{
+  "statistical_results": {
+    "reward": {
+      "anova_p_value": 0.0,
+      "anova_significant": true,
+      "pairwise_significant": {
+        "adaptivereward vs energy_based": true,
+        "adaptivereward vs baseline": true,
+        "adaptivereward vs pbrs": true,
+        "energy_based vs baseline": true,
+        "energy_based vs pbrs": true,
+        "baseline vs pbrs": true
+      }
+    },
+    "distance": {
+      "anova_p_value": NaN,
+      "anova_significant": false,
+      "pairwise_significant": {}
+    }
+  },
+  "adaptation_metrics": {
+    "adaptivereward": {
+      "avg_recovery_time": 14.0,
+      "avg_performance_drop": NaN
+    },
+    "energy_based": {
+      "avg_recovery_time": 48.0,
+      "avg_performance_drop": NaN
+    },
+    "baseline": {
+      "avg_recovery_time": 1.0,
+      "avg_performance_drop": 0.0
+    },
+    "pbrs": {
+      "avg_recovery_time": 0.0,
+      "avg_performance_drop": 23.350875854492188
+    }
+  },
+  "phase_metrics": [
+    {
+      "name": "Environment 1",
+      "best_approach": "pbrs"
+    },
+    {
+      "name": "Environment 2",
+      "best_approach": "baseline"
+    }
+  ]
+}
